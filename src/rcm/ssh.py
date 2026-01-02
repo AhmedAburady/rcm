@@ -70,6 +70,27 @@ class SSHConnection:
         result = conn.run(cmd, hide=hide, warn=True)
         return result.stdout
 
+    def download_content(self, remote_path: str) -> str:
+        """Download file content from remote host.
+
+        Args:
+            remote_path: Remote file path
+
+        Returns:
+            File content as string
+        """
+        conn = self.connect()
+        # Expand ~ in remote path
+        if remote_path.startswith("~"):
+            result = conn.run("echo $HOME", hide=True)
+            home = result.stdout.strip()
+            remote_path = remote_path.replace("~", home, 1)
+
+        result = conn.run(f"cat {remote_path}", hide=True, warn=True)
+        if not result.ok:
+            raise FileNotFoundError(f"Remote file not found: {remote_path}")
+        return result.stdout
+
     def restart_service(self, service_name: str) -> bool:
         """Restart a systemd service.
 

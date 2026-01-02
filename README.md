@@ -162,8 +162,12 @@ The VPS port (`5001`) is extracted from `reverse_proxy 127.0.0.1:5001`.
 ## Usage
 
 ```bash
-# List services parsed from Caddyfile
+# List services (compares local and remote Caddyfiles)
 rcm list
+rcm list --plain         # Plain text output
+
+# Pull Caddyfile from remote VPS to local
+rcm pull
 
 # Preview what would be deployed (dry-run)
 rcm sync --dry-run
@@ -180,11 +184,52 @@ rcm restart --server     # VPS only
 rcm restart --client     # Client only
 ```
 
+## Features
+
+### Service Comparison
+`rcm list` shows which services exist locally vs remotely:
+
+```
+┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃ Service       ┃ Local Address      ┃ VPS Port ┃ Domains       ┃ Local ┃ Remote ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│ homeassistant │ 192.168.1.10:8123  │ 5001     │ ha.example.com│ ✓     │ ✓      │
+│ newservice    │ 192.168.1.50:3000  │ 5002     │ new.example.co│ ✓     │ ✗      │
+└───────────────┴────────────────────┴──────────┴───────────────┴───────┴────────┘
+```
+
+### Auto-Pull on New Machine
+When running `rcm sync` without a local Caddyfile, it automatically pulls from remote:
+
+```bash
+$ rcm sync
+No local Caddyfile found.
+Pulling Caddyfile from remote VPS...
+✓ Caddyfile synced from remote to ~/.config/rcm/Caddyfile
+  Found 8 services
+
+Edit the local Caddyfile and run 'rcm sync' again to deploy changes.
+```
+
+### Service Removal Warning
+When syncing would remove services, RCM asks for confirmation:
+
+```bash
+$ rcm sync
+Parsed 7 services from Caddyfile
+
+Warning: The following 1 service(s) will be removed:
+  - oldservice
+
+Continue with sync? [y/N]:
+```
+
 ## Workflow
 
-1. **Edit your Caddyfile** - add/remove service blocks with comments
-2. **Run `rcm sync`** - deploys everything automatically
-3. **Done!**
+1. **First time?** Run `rcm sync` or `rcm pull` to get the remote Caddyfile
+2. **Edit your local Caddyfile** - add/remove service blocks with comments
+3. **Run `rcm sync`** - deploys everything automatically
+4. **Done!**
 
 ## Caddyfile Format Reference
 

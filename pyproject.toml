@@ -1,6 +1,6 @@
 [project]
 name = "rcm"
-version = "0.1.0"
+version = "0.2.0"
 description = "Rathole Caddy Manager - CLI to manage Rathole tunnels from Caddyfile"
 readme = "README.md"
 requires-python = ">=3.12"
