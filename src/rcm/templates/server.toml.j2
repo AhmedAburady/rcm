@@ -1,0 +1,15 @@
+[server]
+bind_addr = "0.0.0.0:{{ rathole.bind_port }}"
+default_token = "{{ rathole.token }}"
+
+[server.transport]
+type = "noise"
+
+[server.transport.noise]
+local_private_key = "{{ rathole.server_private_key }}"
+
+{% for service in services %}
+[server.services.{{ service.name }}]
+bind_addr = "127.0.0.1:{{ service.vps_port }}"
+
+{% endfor %}

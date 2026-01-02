@@ -1,0 +1,30 @@
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+*.egg-info/
+
+# uv (we reinstall in container)
+.python-version
+uv.lock
+
+# IDE
+.idea/
+.vscode/
+
+# Config (mounted at runtime)
+config/
+
+# Docs (keep README.md for hatchling)
+PLAN.md
+
+# OS
+.DS_Store
+Thumbs.db

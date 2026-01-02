@@ -1,0 +1,8 @@
+services:
+  rcm:
+    build: .
+    volumes:
+      - ./config:/config:rw          # config.yaml + Caddyfile
+      - ~/.ssh:/ssh:ro               # SSH keys directory
+    environment:
+      - CONFIG_PATH=/config/config.yaml

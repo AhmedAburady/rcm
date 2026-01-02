@@ -1,0 +1,68 @@
+# Example Caddyfile for RCM
+#
+# Format: Add a comment before each domain block with:
+#   # service_name: local_ip:port
+#
+# - service_name: identifier used in rathole config (alphanumeric, no spaces)
+# - local_ip:port: the actual service address on your home network
+# - VPS port is extracted from reverse_proxy directive (e.g., 127.0.0.1:5000)
+
+# webapp: 192.168.1.100:3000
+app.example.com {
+    tls /certs/example-cert.pem /certs/example-priv.key
+    reverse_proxy 127.0.0.1:5000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
+
+# homeassistant: 192.168.1.10:8123
+ha.example.com {
+    tls /certs/example-cert.pem /certs/example-priv.key
+    reverse_proxy 127.0.0.1:5001 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
+
+# For services requiring HTTPS backend (e.g., self-signed certs)
+# portainer: 192.168.1.50:9443
+portainer.example.com {
+    tls /certs/example-cert.pem /certs/example-priv.key
+    reverse_proxy https://127.0.0.1:5002 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
+
+# Multiple domains pointing to the same service (only one tunnel created)
+# blog: 192.168.1.100:8080
+blog.example.com {
+    tls /certs/example-cert.pem /certs/example-priv.key
+    reverse_proxy 127.0.0.1:5003 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
+
+# blog: 192.168.1.100:8080
+www.blog.example.com {
+    tls /certs/example-cert.pem /certs/example-priv.key
+    reverse_proxy 127.0.0.1:5003 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}

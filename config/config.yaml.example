@@ -1,0 +1,30 @@
+# RCM Configuration
+# Fill in all fields below
+
+# Paths
+paths:
+  caddyfile: "~/.config/rcm/Caddyfile"   # Path to your Caddyfile
+  ssh_dir: "~/.ssh"                       # SSH keys directory
+
+# VPS (Server) SSH Configuration
+server:
+  host: "YOUR_VPS_IP"                     # VPS IP address
+  user: "root"                            # SSH user
+  ssh_key: "id_rsa"                       # SSH key filename
+  rathole_config: "/etc/rathole/server.toml"
+  caddyfile: "~/rathole-caddy/caddy/Caddyfile"
+  caddy_compose_dir: "~/rathole-caddy/caddy"
+
+# Home (Client) SSH Configuration
+client:
+  host: "YOUR_CLIENT_IP"                  # Home machine IP
+  user: "YOUR_USER"                       # SSH user
+  ssh_key: "id_rsa"                       # SSH key filename
+  rathole_config: "/etc/rathole/client.toml"
+
+# Rathole keys (from: rathole --genkey)
+rathole:
+  bind_port: 2333
+  token: "YOUR_TOKEN"                     # From: openssl rand -base64 32
+  server_private_key: "YOUR_PRIVATE_KEY"  # From: rathole --genkey (private key)
+  server_public_key: "YOUR_PUBLIC_KEY"    # From: rathole --genkey (public key)

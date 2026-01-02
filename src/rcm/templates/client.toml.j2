@@ -1,0 +1,15 @@
+[client]
+remote_addr = "{{ server.host }}:{{ rathole.bind_port }}"
+default_token = "{{ rathole.token }}"
+
+[client.transport]
+type = "noise"
+
+[client.transport.noise]
+remote_public_key = "{{ rathole.server_public_key }}"
+
+{% for service in services %}
+[client.services.{{ service.name }}]
+local_addr = "{{ service.local_addr }}"
+
+{% endfor %}
